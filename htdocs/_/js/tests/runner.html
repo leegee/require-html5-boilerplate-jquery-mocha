@@ -6,9 +6,6 @@
 
 		<link rel="stylesheet" media="all" href="vendor/mocha/mocha.css">
 
-		<!-- Do not move this into the require call... -->
-		<script src='vendor/mocha/mocha.js'></script>
-
 		<script src='../vendor/require.js'></script>
         <script>
 			/** The tests themselves */
@@ -19,6 +16,7 @@
 
             /** Needed to run the tests */
             var TEST_LIBS = [
+                'vendor/mocha/mocha.js',
                 'vendor/chai/chai.js',
                 'vendor/should/should.js'
             ];
