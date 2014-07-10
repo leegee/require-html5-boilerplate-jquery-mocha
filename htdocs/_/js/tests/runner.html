@@ -9,38 +9,32 @@
 		<!-- Do not move this into the require call... -->
 		<script src='vendor/mocha/mocha.js'></script>
 
-		<script src='../js/vendor/require.js'></script>
+		<script src='../vendor/require.js'></script>
         <script>
-        	/** Needed to run the tests */
-	  	  	var PRE_LIBS = [
-				'vendor/chai/chai.js',
-				'vendor/should/should.js'
-			];
-
 			/** The tests themselves */
 			var TEST_SPECS = [
 				'examples/simple.js',
 				'examples/ajax.js'
 			];
 
-	  	  	// Hack to test if we are being called headless or not: cf Gruntfile.js
-	  	  	// See require-global-config.js for an explanation/apology:
-/** @global */
-	  	  	var global = global || {};
-	  	  	global.CDN_JS_ROOT = '../';
+            /** Needed to run the tests */
+            var TEST_LIBS = [
+                'vendor/chai/chai.js',
+                'vendor/should/should.js'
+            ];
 
-/** @global */
+            /** @global */
 			var TEST_RUNNER = {};
 			TEST_RUNNER.html_fixture_selector = '#fixture-holder';
 
-			require(['../js/main.js'], function(){
-				require( PRE_LIBS, function () {
+            /** @global */
+            window.require_base_url = '../';
+			require(['../require-global-config.js'], function(){
+				require( TEST_LIBS, function () {
 					mocha.setup('bdd');
-
 					require( TEST_SPECS, function (m){
 						mocha.run();
 					});
-
 				});
 			});
 		</script>

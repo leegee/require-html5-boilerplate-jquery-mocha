@@ -19,16 +19,18 @@
             console[method] = noop;
         }
     }
+
+    var baseUrl = window.require_base_url || "_/js/";
+
+    require.config({
+        baseUrl: baseUrl, // Relative to the caller
+        paths: {
+            jquery: [
+                '//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js',
+                'vendor/jquery-1.11.1.min'
+            ],
+            modernizer: 'vendor/modernizr-2.8.0.min'
+        }
+    });
+
 }());
-
-require.config({
-    baseUrl: "_/js/", // Relative to the caller
-    paths: {
-        jquery: [
-            '//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js',
-            'vendor/jquery-1.11.1.min'
-        ],
-        modernizer: 'vendor/modernizr-2.8.0.min'
-    }
-});
-
