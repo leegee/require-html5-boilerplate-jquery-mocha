@@ -20,6 +20,7 @@
         }
     }
 
+    // Allows tests to use this file, too
     var baseUrl = window.require_base_url || "_/js/";
 
     require.config({
