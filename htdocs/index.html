@@ -12,7 +12,17 @@
         <link rel="stylesheet" href="_/css/normalize.css">
         <link rel="stylesheet" href="_/css/main.css">
 
-        <script src="_/js/vendor/require.js" data-main="_/js/app/main.js"></script>
+        <script src="_/js/vendor/require.js"></script>
+        <script>
+        require(['_/js/require-global-config'], function () {
+            console.info('Loaded require-global-config.js');
+            require(['_/js/app/index.js'], function () {
+                console.info('Required page-specific JS.');
+            });
+        });
+        </script>
+
+
     </head>
     <body>
         <!--[if lt IE 8]>
