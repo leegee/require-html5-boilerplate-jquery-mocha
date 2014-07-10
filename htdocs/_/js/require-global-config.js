@@ -20,7 +20,6 @@
         }
     }
 
-<<<<<<< HEAD:htdocs/_/js/require-global-config.js
     var baseUrl = window.require_base_url || "_/js/";
 
     require.config({
@@ -35,5 +34,3 @@
     });
 
 }());
-=======
->>>>>>> 62f7a605719337f49fb97a98661d025118ea2baa:htdocs/_/js/require-global-config.js
