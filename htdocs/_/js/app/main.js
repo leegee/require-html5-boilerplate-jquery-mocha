@@ -14,7 +14,7 @@
     while (length--) {
         method = methods[length];
 
-        // Only stub undefined methods.
+        // Stub undefined methods.
         if (!console[method]) {
             console[method] = noop;
         }
@@ -22,7 +22,7 @@
 }());
 
 require.config({
-    baseUrl: "../",
+    baseUrl: "_/js/", // Relative to the caller
     paths: {
         jquery: [
             '//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js',
@@ -33,3 +33,13 @@ require.config({
 });
 
 // requirejs.onError = function (err) {}
+
+define( ['jquery'], function (jquery) {
+    jquery(document).ready( function () {
+        jquery('body').append('<h1>Loaded and ready</h1>');
+    });
+});
+
+
+
+
