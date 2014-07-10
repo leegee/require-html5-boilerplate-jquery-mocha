@@ -28,9 +28,12 @@
             /** @global */
             window.require_base_url = '../';
 			require(['../require-global-config.js'], function(){
+                console.info('Loaded require-global-config.js');
 				require( TEST_LIBS, function () {
+                    console.info('Loaded test libs, ', TEST_LIBS);
 					mocha.setup('bdd');
 					require( TEST_SPECS, function (m){
+                        console.info('Loaded test speces, ', TEST_SPECS);
 						mocha.run();
 					});
 				});
