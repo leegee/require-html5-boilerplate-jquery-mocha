@@ -92,9 +92,9 @@ module.exports = function(grunt) {
                     'htdocs/_/js/*.js',
                     'htdocs/_/js/lib/**/*.js',
                     'htdocs/_/js/app/**/*.js',
-                    'htdocs/_/tests/**/*.js',
+                    'htdocs/_/js/tests/**/*.js',
                     // Ignore !these:
-                    '!htdocs/_/tests/vendor/**/*.js',
+                    '!htdocs/_/js/tests/vendor/**/*.js',
                 ],
             },
             options: {
@@ -144,7 +144,7 @@ module.exports = function(grunt) {
                     'htdocs/_/js/*.js',
                     'htdocs/_/js/app/**/*.js',
                     'htdocs/_/js/lib/**/*.js',
-                    'htdocs/_/tests/**/*.js'
+                    'htdocs/_/js/tests/**/*.js'
                 ],
                 dest: 'htdocs/_/docs/',
                 options: {
@@ -171,12 +171,12 @@ module.exports = function(grunt) {
 
 
         /** <h4>Task</h4> Runs the Mocha tests on `connect` via Phantom JS.
-         * Jenkins support is TODO via https://github.com/futurice/mocha-jenkins-reporter
          * This task uses the `tests/runner.html` to run tests, to allow us to use the
          * same framework for server-side and browser testing.
          * @name mocha
          * @memberOf module:Gruntfile
          * @see module:Gruntfile#connect
+         * @see Jenkins support is TODO via https://github.com/futurice/mocha-jenkins-reporter
          */
         mocha: {
             test: {
@@ -188,7 +188,7 @@ module.exports = function(grunt) {
                     hostname    : '*',
                     port        : parseInt( DEV_PORT ), /** Also in tests/runner.html */
                     ui          : 'bdd', /** Passed to mocha.setup() */
-                    urls        : [ 'http://127.0.0.1:' + DEV_PORT + '/htdocs/tests/runner.html' ]
+                    urls        : [ 'http://127.0.0.1:' + DEV_PORT + '/htdocs/_/js/tests/runner.html' ]
                 }
             }
         },
@@ -211,7 +211,7 @@ module.exports = function(grunt) {
                 '*.js',
                 'htdocs/_/js/lib/**/*.js',
                 'htdocs/_/js/app/**/*.js',
-                'htdocs/_/tests/**/*.js'
+                'htdocs/_/js/tests/**/*.js'
             ]
         },
 
@@ -247,8 +247,8 @@ module.exports = function(grunt) {
                     'htdocs/_/js/*.js',
                     'htdocs/_/js/app/*.js',
                     'htdocs/_/js/lib/**/*.js',
-                    'htdocs/_/tests/**/*.js',
-                    'htdocs/_/tests/runner.html'
+                    'htdocs/_/js/tests/**/*.js',
+                    'htdocs/_/js/tests/runner.html'
                 ],
                 tasks: [ 'jshint'],
                 options: {
@@ -369,12 +369,16 @@ module.exports = function(grunt) {
              */
             mocha: {
                 options: {
-                    hostname    : '*',
+                    protocol    : 'http',
+                    hostname    : '127.0.0.1',
                     port        : DEV_PORT,
-                    base        : '.',
+                    base        : 'htdocs/',
                     debug       : true,
-                    // keepalive    : true,
-                    middleware  : connectCORDSmiddleware
+                    middleware  : connectCORDSmiddleware,
+                    log         : true,
+                    logErrors   : true
+                    // open        : true,
+                    // keepalive   : true
                 }
             },
 
