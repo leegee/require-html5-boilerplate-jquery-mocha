@@ -181,14 +181,52 @@ module.exports = function(grunt) {
         mocha: {
             test: {
                 options: {
-                    log         : true,
-                    logErrors   : true,
                     run         : false,
                     reporter    : 'Spec',
-                    hostname    : '*',
+                    hostname    : '127.0.0.1',
                     port        : parseInt( DEV_PORT ), /** Also in tests/runner.html */
                     ui          : 'bdd', /** Passed to mocha.setup() */
                     urls        : [ 'http://127.0.0.1:' + DEV_PORT + '/htdocs/_/js/tests/runner.html' ]
+                }
+            }
+        },
+
+       connect: {
+            /** <h4>Task <code>connect:mocha</code></h4>
+             * Runs an instance of a Connect server for use with the `mocha` task.
+             * http://127.0.0.1:8181/htdocs/_/js/tests/runner.html
+             * @name connect:test
+             * @memberOf module:Gruntfile
+             */
+            mocha: {
+                options: {
+                    middleware  : connectCORDSmiddleware,
+                    protocol    : 'http',
+                    hostname    : '127.0.0.1',
+                    port        : parseInt( DEV_PORT ),
+                    base        : 'htdocs/',
+                    debug       : true,
+                    log         : true,
+                    logErrors   : true
+                    // , open        : 'http://127.0.0.1:'+parseInt(DEV_PORT)+'/htdocs/_/js/tests/runner.html',
+                    // keepalive   : true
+                }
+            },
+
+        /** <h4>Task connect:build_test</h4>
+         * As the <code>connect:test</code> task, but on a different port, with a
+         * document root of (@link DIST_PATH}.
+         * @name connect:build_test
+         * @memberOf module:Gruntfile
+         */
+            build_test: {
+                options: {
+                    hostname: '*',
+                    port: 88889, // Should also be in test/runner.html
+                    base: DIST_PATH,
+                    debug: true,
+                    // keepalive: true, // open: '/tests/runner.html',
+                    middleware  : connectCORDSmiddleware
                 }
             }
         },
@@ -359,46 +397,8 @@ module.exports = function(grunt) {
                     }
                 ]
             }
-        },
-
-        connect: {
-            /** <h4>Task <code>connect:mocha</code></h4>
-             * Runs an instance of a Connect server for use with the `mocha` task.
-             * @name connect:test
-             * @memberOf module:Gruntfile
-             */
-            mocha: {
-                options: {
-                    protocol    : 'http',
-                    hostname    : '127.0.0.1',
-                    port        : DEV_PORT,
-                    base        : 'htdocs/',
-                    debug       : true,
-                    middleware  : connectCORDSmiddleware,
-                    log         : true,
-                    logErrors   : true
-                    // open        : true,
-                    // keepalive   : true
-                }
-            },
-
-        /** <h4>Task connect:build_test</h4>
-         * As the <code>connect:test</code> task, but on a different port, with a
-         * document root of (@link DIST_PATH}.
-         * @name connect:build_test
-         * @memberOf module:Gruntfile
-         */
-            build_test: {
-                options: {
-                    hostname: '*',
-                    port: 88889, // Should also be in test/runner.html
-                    base: DIST_PATH,
-                    debug: true,
-                    // keepalive: true, // open: '/tests/runner.html',
-                    middleware  : connectCORDSmiddleware
-                }
-            }
         }
+
     });
 
 
