@@ -164,7 +164,7 @@ module.exports = function(grunt) {
             debug: {
                 src: ['htdocs/_/js/lib/**/*.js'],
                 options: {
-                    output: 'docs-tech/'
+                    output: 'htdocs/_/docs-tech/'
                 }
             }
         },
@@ -303,7 +303,7 @@ module.exports = function(grunt) {
          * to be completed by first running the `build` task. Uses `r.js` and `ugilfy2`.
          * @name requirejs
          * @memberOf module:Gruntfile
-         *
+         */
         requirejs: {
             compile: {
                 options: {
@@ -332,8 +332,7 @@ module.exports = function(grunt) {
                                 'jquery',
                                 'jquery-ui',
                                 'jquery-ui-i18n',
-                                'modernizer',
-                                'MobileMenu'
+                                'modernizer'
                             ]
                         }
                         // A layer for each app/ layer, excluding the
@@ -346,7 +345,7 @@ module.exports = function(grunt) {
                     ]
                 }
             }
-        }, */
+        },
 
         clean: {
             /** <h4>Task</h4> Cleans the 'distribution' directory as part of the `build` target.
