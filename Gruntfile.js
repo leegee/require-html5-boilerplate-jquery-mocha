@@ -1,14 +1,10 @@
 /*global module:false, require:false*/
 /**
-* @fileOverview Gruntfile.js — tests, builds, documents
+* @fileOverview CDN Javascript Gruntfile.js — tests, builds, documents
 * @example
 *
-* # Install Grunt
-* sudo npm install -g grunt
 * sudo npm install -g grunt-cli
-* # Install project dependencies
 * npm install
-* # Go
 * grunt --help // Display all targets
 * grunt jshint // Lint
 * grunt test   // Run checks and test
@@ -42,10 +38,11 @@ module.exports = function(grunt) {
     var Fs      = require('fs');
     var Walk    = require('walk');
 
-    /** Path to the desiination distribution directory to serve minified files live. */
-    var DIST_PATH = '../dist/javascript/';
+    /** Path to the desiination 'dist/' directory to serve minified files live. */
+    var DIST_PATH = 'dist/';
 
-    /** Port on whcih to run the Connect server for tests. */
+    /** Port on whcih to run the Connect server for tests.
+    * @see tests/testrunner.html, which also specs the port. */
     var DEV_PORT = 8181;
 
     var connectCORDSmiddleware = function (connect, options, next) {
@@ -94,6 +91,7 @@ module.exports = function(grunt) {
                     'htdocs/_/js/app/**/*.js',
                     'htdocs/_/js/tests/**/*.js',
                     // Ignore !these:
+                    '!htdocs/_/js/lib/modal-window.js',
                     '!htdocs/_/js/tests/vendor/**/*.js',
                 ],
             },
@@ -116,7 +114,7 @@ module.exports = function(grunt) {
                     global  : true,     // ours
                     console : true,     // of window
 
-                    // just in tests/
+                    // just in spec/
                     beforeEach  : true,
                     afterEach   : true,
                     describe    : true,
@@ -140,13 +138,13 @@ module.exports = function(grunt) {
         jsdoc : {
             dist : {
                 src: [
-                    'README.md',
+                    'htdocs/_/js/README.md',
                     'htdocs/_/js/*.js',
                     'htdocs/_/js/app/**/*.js',
                     'htdocs/_/js/lib/**/*.js',
                     'htdocs/_/js/tests/**/*.js'
                 ],
-                dest: 'htdocs/_/docs/',
+                dest: 'htdocs/_/js/docs/',
                 options: {
                     configure: 'jsdoc.config.json',
                     template:  'node_modules/ink-docstrap/template'
@@ -164,69 +162,31 @@ module.exports = function(grunt) {
             debug: {
                 src: ['htdocs/_/js/lib/**/*.js'],
                 options: {
-                    output: 'htdocs/_/docs-tech/'
+                    output: 'htdocs/_/js/docs-tech/'
                 }
             }
         },
 
 
         /** <h4>Task</h4> Runs the Mocha tests on `connect` via Phantom JS.
-         * This task uses the `tests/runner.html` to run tests, to allow us to use the
+         * Jenkins support is TODO via https://github.com/futurice/mocha-jenkins-reporter
+         * This task uses the `spec/runner.html` to run tests, to allow us to use the
          * same framework for server-side and browser testing.
          * @name mocha
          * @memberOf module:Gruntfile
          * @see module:Gruntfile#connect
-         * @see Jenkins support is TODO via https://github.com/futurice/mocha-jenkins-reporter
          */
         mocha: {
             test: {
                 options: {
+                    log         : true,
+                    logErrors   : true,
                     run         : false,
                     reporter    : 'Spec',
-                    hostname    : '127.0.0.1',
+                    hostname    : '*',
                     port        : parseInt( DEV_PORT ), /** Also in tests/runner.html */
                     ui          : 'bdd', /** Passed to mocha.setup() */
                     urls        : [ 'http://127.0.0.1:' + DEV_PORT + '/htdocs/_/js/tests/runner.html' ]
-                }
-            }
-        },
-
-       connect: {
-            /** <h4>Task <code>connect:mocha</code></h4>
-             * Runs an instance of a Connect server for use with the `mocha` task.
-             * http://127.0.0.1:8181/htdocs/_/js/tests/runner.html
-             * @name connect:test
-             * @memberOf module:Gruntfile
-             */
-            mocha: {
-                options: {
-                    middleware  : connectCORDSmiddleware,
-                    protocol    : 'http',
-                    hostname    : '127.0.0.1',
-                    port        : parseInt( DEV_PORT ),
-                    base        : 'htdocs/',
-                    debug       : true,
-                    log         : true,
-                    logErrors   : true
-                    // , open        : 'http://127.0.0.1:'+parseInt(DEV_PORT)+'/htdocs/_/js/tests/runner.html',
-                    // keepalive   : true
-                }
-            },
-
-        /** <h4>Task connect:build_test</h4>
-         * As the <code>connect:test</code> task, but on a different port, with a
-         * document root of (@link DIST_PATH}.
-         * @name connect:build_test
-         * @memberOf module:Gruntfile
-         */
-            build_test: {
-                options: {
-                    hostname: '*',
-                    port: 88889, // Should also be in test/runner.html
-                    base: DIST_PATH,
-                    debug: true,
-                    // keepalive: true, // open: '/tests/runner.html',
-                    middleware  : connectCORDSmiddleware
                 }
             }
         },
@@ -246,7 +206,7 @@ module.exports = function(grunt) {
                 reporter: 'markdown' // default | markdown | path
             },
             files: [
-                '*.js',
+                'htdocs/_/js/*.js',
                 'htdocs/_/js/lib/**/*.js',
                 'htdocs/_/js/app/**/*.js',
                 'htdocs/_/js/tests/**/*.js'
@@ -297,8 +257,7 @@ module.exports = function(grunt) {
             },
         },
 
-        /* Untested
-         * <h4>Task</h4> Concatinate, minify, and uglify the JS source for public distribution.
+        /** <h4>Task</h4> Concatinate, minify, and uglify the JS source for public distribution.
          * Note that this task is *not* a stand-alone task: its configuration needsd
          * to be completed by first running the `build` task. Uses `r.js` and `ugilfy2`.
          * @name requirejs
@@ -307,7 +266,7 @@ module.exports = function(grunt) {
         requirejs: {
             compile: {
                 options: {
-                    baseUrl: 'htdocs/_/js/lib/',
+                    baseUrl: 'lib/',
                     mainConfigFile  : 'require-global-config.js',
                     dir             : DIST_PATH + '/app/',      // Output dir
                     removeCombined  : true,
@@ -332,16 +291,18 @@ module.exports = function(grunt) {
                                 'jquery',
                                 'jquery-ui',
                                 'jquery-ui-i18n',
-                                'modernizer'
+                                'modernizer',
+                                'MobileMenu'
                             ]
                         }
                         // A layer for each app/ layer, excluding the
-                        // This is the pattern for the entries in this modules array dynamically generated by build_config
-                        // {
-                        //     name: 'search',
-                        //     // include: comes from the app/ script itself,
-                        //     exclude: ['require-global-config']  // Exclude files common to all HTML documents, as above.
-                        // }
+                        /* This is the pattern for the entries in this modules array dynamically generated by build_config
+                        {
+                            name: 'search',
+                            // include: comes from the app/ script itself,
+                            exclude: ['require-global-config']  // Exclude files common to all HTML documents, as above.
+                        }
+                        */
                     ]
                 }
             }
@@ -396,8 +357,42 @@ module.exports = function(grunt) {
                     }
                 ]
             }
-        }
+        },
 
+        connect: {
+            /** <h4>Task <code>connect:mocha</code></h4>
+             * Runs an instance of a Connect server for use with the `mocha` task.
+             * @name connect:test
+             * @memberOf module:Gruntfile
+             */
+            mocha: {
+                options: {
+                    hostname    : '*',
+                    port        : DEV_PORT,
+                    base        : '.',
+                    debug       : true,
+                    // keepalive    : true,
+                    middleware  : connectCORDSmiddleware
+                }
+            },
+
+        /** <h4>Task connect:build_test</h4>
+         * As the <code>connect:test</code> task, but on a different port, with a
+         * document root of (@link DIST_PATH}.
+         * @name connect:build_test
+         * @memberOf module:Gruntfile
+         */
+            build_test: {
+                options: {
+                    hostname: '*',
+                    port: 88889, // Should also be in test/runner.html
+                    base: DIST_PATH,
+                    debug: true,
+                    // keepalive: true, // open: '/spec/runner.html',
+                    middleware  : connectCORDSmiddleware
+                }
+            }
+        }
     });
 
 
@@ -462,4 +457,13 @@ module.exports = function(grunt) {
         done();
     });
 };
+
+
+
+
+
+
+
+
+
 
