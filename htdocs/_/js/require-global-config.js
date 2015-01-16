@@ -27,7 +27,7 @@
         baseUrl: baseUrl, // Relative to the caller
         paths: {
             jquery: [
-                '//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js',
+                '//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min',
                 'vendor/jquery-1.11.1.min'
             ],
             'jquery-ui':        'vendor/modernizer-2.8.0.min',
