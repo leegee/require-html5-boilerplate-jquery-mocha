@@ -30,8 +30,6 @@
                 '//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min',
                 'vendor/jquery-1.11.1.min'
             ],
-            'jquery-ui':        'vendor/modernizer-2.8.0.min',
-            'jquery-ui-i18n':   'vendor/jquery-ui-i18n',
             modernizer:         'vendor/modernizr-2.8.0.min'
         }
     });
